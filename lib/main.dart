@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -57,9 +59,33 @@ class _MyHomePageState extends State<MyHomePage> {
   }
   Future _getImage() async{
     var image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    // String dir = (await getApplicationDocumentsDirectory()).path;
+    // String newPath = path.join(dir, 'hangang.jpg');
+    // _image = await File(image.path).copy(newPath);
+    // 위와 같은 방법으로도 파일의 이름을 변경할 수 있다.!
     setState(() {
+      // _image = newImage as File;
+      // print(_image.name);
       _image = image;
     });
+  }
+  uploadImage(XFile imageFile) async{
+      var request = http.MultipartRequest('POST',Uri.parse('http://nacha01.dothome.co.kr/sin/save_image_file.php'));
+      request.fields['name'] = 'hangang';
+
+      var pic = await http.MultipartFile.fromPath("file_field", imageFile.path,filename: 'hahaha2.jpg');
+      // ㅡㅡ.. 파일 이름 변경 기능이 여기에 간단하게 있었네..
+
+      request.files.add(pic);
+      print(imageFile.path);
+      var response = await request.send();
+
+      print(response.headers);
+      print(response.statusCode);
+      var responseData = await response.stream.toBytes();
+
+      var responseString = String.fromCharCodes(responseData);
+      print(responseString);
   }
   @override
   Widget build(BuildContext context) {
@@ -71,6 +97,10 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+
+            FlatButton(onPressed: (){
+              uploadImage(_image);
+            }, child: Text('upload image')),
             FlatButton(onPressed: _getImage, child: Text('select images')),
             _image == null ? Text('no image') : Image.file(File((_image as XFile).path)),
             Text(
