@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -27,6 +30,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   bool _isLoaded = false;
   String resultQuery;
+  var _image;
   @override
   void initState() {
     super.initState();
@@ -51,6 +55,12 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     }
   }
+  Future _getImage() async{
+    var image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = image;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,6 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            FlatButton(onPressed: _getImage, child: Text('select images')),
+            _image == null ? Text('no image') : Image.file(File((_image as XFile).path)),
             Text(
               'You have pushed the button this many times:',
             ),
