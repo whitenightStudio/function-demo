@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:function_test/login_page.dart';
+import 'package:function_test/register_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -72,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
   uploadImage(XFile imageFile) async{
       var request = http.MultipartRequest('POST',Uri.parse('http://nacha01.dothome.co.kr/sin/save_image_file.php'));
       request.fields['name'] = 'hangang';
-
+      request.fields['test'] = 'hello world';
       var pic = await http.MultipartFile.fromPath("file_field", imageFile.path,filename: 'hahaha2.jpg');
       // ㅡㅡ.. 파일 이름 변경 기능이 여기에 간단하게 있었네..
 
@@ -94,25 +96,32 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-
-            FlatButton(onPressed: (){
-              uploadImage(_image);
-            }, child: Text('upload image')),
-            FlatButton(onPressed: _getImage, child: Text('select images')),
-            _image == null ? Text('no image') : Image.file(File((_image as XFile).path)),
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-            _isLoaded ?
-            Image.network(resultQuery,) : Text('ttt')
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              FlatButton(onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+              }, child: Text('로그인 하러 가기')),
+              FlatButton(onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage()));
+              }, child: Text('회원가입 하러 가기')),
+              FlatButton(onPressed: (){
+                uploadImage(_image);
+              }, child: Text('upload image')),
+              FlatButton(onPressed: _getImage, child: Text('select images')),
+              _image == null ? Text('no image') : Image.file(File((_image as XFile).path)),
+              Text(
+                'You have pushed the button this many times:',
+              ),
+              Text(
+                '$_counter',
+                style: Theme.of(context).textTheme.display1,
+              ),
+              _isLoaded ?
+              Image.network(resultQuery,) : Text('ttt')
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
