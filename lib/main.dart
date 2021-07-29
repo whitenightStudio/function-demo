@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:function_test/login_page.dart';
+import 'package:function_test/phone_validation_page.dart';
 import 'package:function_test/register_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -100,6 +101,9 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              FlatButton(onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Certification()));
+              }, child: Text('휴대폰 인증 하러 가기')),
               FlatButton(onPressed: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
               }, child: Text('로그인 하러 가기')),
